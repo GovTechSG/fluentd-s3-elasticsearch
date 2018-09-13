@@ -43,6 +43,3 @@ jobs:
         - GEM_S3_NAME="fluent-plugin-s3"
         - GEM_ES_NAME="fluent-plugin-elasticsearch"
       <<: *build_script
-branches:
-  only:
-    - master
