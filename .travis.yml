@@ -33,7 +33,9 @@ after_script:
         docker push ${BUILD_TAG};
         docker tag ${BUILD_TAG} ${DH_REPO}:${PREFIX}-latest;
         docker push ${DH_REPO}:${PREFIX}-latest;
-      fi
+        docker tag ${BUILD_TAG} ${DH_REPO}:latest;
+        docker push ${DH_REPO}:latest;
+        fi
 jobs:
   include:
     - stage: build_and_push

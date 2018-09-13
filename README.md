@@ -18,6 +18,7 @@ Latest versions of both plugins
 
 ### `fluent-plugin-s3-elasticsearch`
 
+Latest: `<FLUENTD-VERSION>-latest`
 Canonical Tag: `<FLUENTD-VERSION>-<S3_PLUGIN_VERSION>-<ES_PLUGIN_VERSION>`
 
 ## Usage
