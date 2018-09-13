@@ -10,15 +10,17 @@ after_script:
   - docker logout
 .build_script: &build_script
   script:
-    - NEXT_TAG="${DH_REPO}:${GEM_NAME}-next";
-    - docker build --build-arg GEM_NAME=${GEM_NAME} --build-arg GEM_VERSION=${GEM_VERSION:-""} -t "${NEXT_TAG}" .;
+    - NEXT_TAG="${DH_REPO}:next";
+    - docker build --build-arg GEM_S3_NAME=${GEM_S3_NAME} --build-arg GEM_S3_VERSION=${GEM_S3_VERSION:-""} --build-arg GEM_ES_NAME=${GEM_ES_NAME} --build-arg GEM_ES_VERSION=${GEM_ES_VERSION:-""} -t "${NEXT_TAG}" .;
     - VERSIONS=$(docker run --entrypoint="version-info" ${NEXT_TAG});
     - echo "Installed Versions=${VERSIONS}"
     - VERSION_FLUENTD=$(printf "${VERSIONS}" | grep "fluentd:" | cut -d ":" -f 2);
-    - GEM_INSTALLED=$(printf "${VERSIONS}" | grep -E "fluent-plugin-s3" | cut -d ":" -f 1);
-    - GEM_VERSION=$(printf "${VERSIONS}" | grep -E "fluent-plugin-s3" | cut -d ":" -f 2);
-    - PREFIX="fluentd-${VERSION_FLUENTD}_${GEM_INSTALLED}"
-    - BUILD_TAG="${DH_REPO}:${PREFIX}-${GEM_VERSION}"
+    - GEM_S3_INSTALLED=$(printf "${VERSIONS}" | grep -E "fluent-plugin-s3" | cut -d ":" -f 1);
+    - GEM_S3_VERSION=$(printf "${VERSIONS}" | grep -E "fluent-plugin-s3" | cut -d ":" -f 2);
+    - GEM_ES_INSTALLED=$(printf "${VERSIONS}" | grep -E "fluent-plugin-elasticsearch" | cut -d ":" -f 1);
+    - GEM_ES_VERSION=$(printf "${VERSIONS}" | grep -E "fluent-plugin-elasticsearch" | cut -d ":" -f 2);
+    - PREFIX="${VERSION_FLUENTD}"
+    - BUILD_TAG="${DH_REPO}:${PREFIX}-${GEM_S3_VERSION}-${GEM_ES_VERSION}"
     - echo "New Docker Tag=${BUILD_TAG}"
     - _="$(docker pull "${BUILD_TAG}")" && EXIST=$? || :;
     - |
@@ -31,11 +33,13 @@ after_script:
         docker push ${BUILD_TAG};
         docker tag ${BUILD_TAG} ${DH_REPO}:${PREFIX}-latest;
         docker push ${DH_REPO}:${PREFIX}-latest;
-      fi
+        docker tag ${BUILD_TAG} ${DH_REPO}:latest;
+        docker push ${DH_REPO}:latest;
+        fi
 jobs:
   include:
     - stage: build_and_push
       env:
-        - GEM_NAME="fluent-plugin-s3"
+        - GEM_S3_NAME="fluent-plugin-s3"
+        - GEM_ES_NAME="fluent-plugin-elasticsearch"
       <<: *build_script
-
