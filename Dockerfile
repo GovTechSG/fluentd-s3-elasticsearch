@@ -16,25 +16,25 @@ RUN apk add --update --no-cache --virtual $APK_ADD && \
   apk del ${APK_DEL} && rm -rf /var/cache/apk/* \
     /home/fluent/.gem/ruby/2.4.0/cache/*.gem
 
-RUN deluser --remove-home postmaster
-RUN deluser --remove-home cyrus
-RUN deluser --remove-home mail
-RUN deluser --remove-home news
-RUN deluser --remove-home uucp
-RUN deluser --remove-home operator
-RUN deluser --remove-home man
-RUN deluser --remove-home cron
-RUN deluser --remove-home ftp
-RUN deluser --remove-home sshd
-RUN deluser --remove-home at
-RUN deluser --remove-home squid
-RUN deluser --remove-home xfs
-RUN deluser --remove-home games
-RUN deluser --remove-home postgres
-RUN deluser --remove-home vpopmail
-RUN deluser --remove-home ntp
-RUN deluser --remove-home smmsp
-RUN deluser --remove-home guest
+RUN deluser --remove-home postmaster \
+  && deluser --remove-home cyrus \
+  && deluser --remove-home mail \
+  && deluser --remove-home news \
+  && deluser --remove-home uucp \
+  && deluser --remove-home operator \
+  && deluser --remove-home man \
+  && deluser --remove-home cron \
+  && deluser --remove-home ftp \
+  && deluser --remove-home sshd \
+  && deluser --remove-home at \
+  && deluser --remove-home squid \
+  && deluser --remove-home xfs \
+  && deluser --remove-home games \
+  && deluser --remove-home postgres \
+  && deluser --remove-home vpopmail \
+  && deluser --remove-home ntp \
+  && deluser --remove-home smmsp \
+  && deluser --remove-home guest
 
 COPY ./scripts/version-info /usr/bin
 EXPOSE 24224
